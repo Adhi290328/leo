@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TuneSpot Playlist Cover Designs</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #070709;
+    color: #fff;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    padding: 24px;
+  }
+
+  h1 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+  .subtitle {
+    font-size: 12px;
+    color: #6B7280;
+    margin-bottom: 28px;
+  }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    color: #6B7280;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    margin-top: 32px;
+    padding-left: 2px;
+  }
+
+  /* ── Tab bar ── */
+  .tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+  .tab {
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    background: #15161D;
+    color: #9CA3AF;
+    border: 1px solid #1F2030;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .tab.active {
+    background: #1DB954;
+    color: #000;
+    border-color: #1DB954;
+  }
+
+  /* ── Design panels ── */
+  .design-panel { display: none; }
+  .design-panel.active { display: block; }
+
+  .cards-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  /* ────────────────────────────────────────────
+     FAKE IMAGE TILES (coloured blocks as stand-ins
+     for real album art)
+  ──────────────────────────────────────────── */
+  .img { width: 100%; height: 100%; display: block; }
+
+  /* Album art colour palettes */
+  .art-a { background: linear-gradient(135deg, #7C3AED, #4F46E5); }
+  .art-b { background: linear-gradient(135deg, #DC2626, #B45309); }
+  .art-c { background: linear-gradient(135deg, #059669, #0284C7); }
+  .art-d { background: linear-gradient(135deg, #DB2777, #7C3AED); }
+  .art-e { background: linear-gradient(135deg, #D97706, #DC2626); }
+  .art-f { background: linear-gradient(135deg, #0891B2, #059669); }
+
+  /* ────────────────────────
+     DESIGN A — Stacked fan
+  ──────────────────────── */
+  .fan-card {
+    width: 140px;
+    background: #15161D;
+    border-radius: 16px;
+    padding: 10px;
+    border: 1px solid #1F2030;
+  }
+  .fan-cover {
+    width: 120px;
+    height: 120px;
+    position: relative;
+    margin: 0 auto 10px;
+  }
+  .fan-img {
+    position: absolute;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .fan-img-1 {
+    width: 90px; height: 90px;
+    bottom: 0; left: 0;
+    z-index: 3;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+  }
+  .fan-img-2 {
+    width: 80px; height: 80px;
+    bottom: 12px; left: 20px;
+    z-index: 2;
+    opacity: 0.85;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  }
+  .fan-img-3 {
+    width: 70px; height: 70px;
+    bottom: 22px; left: 38px;
+    z-index: 1;
+    opacity: 0.6;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+  .fan-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .fan-sub {
+    font-size: 11px;
+    color: #6B7280;
+    margin-top: 2px;
+  }
+
+  /* ────────────────────────
+     DESIGN B — Rotated stack (Spotify-style)
+  ──────────────────────── */
+  .rot-card {
+    width: 140px;
+    background: #15161D;
+    border-radius: 16px;
+    padding: 10px;
+    border: 1px solid #1F2030;
+  }
+  .rot-cover {
+    width: 120px;
+    height: 120px;
+    position: relative;
+    margin: 0 auto 10px;
+  }
+  .rot-img {
+    position: absolute;
+    width: 96px; height: 96px;
+    border-radius: 10px;
+    overflow: hidden;
+    left: 12px; top: 12px;
+  }
+  .rot-img-back2 {
+    transform: rotate(-8deg);
+    transform-origin: center;
+    top: 8px; left: 8px;
+    opacity: 0.5;
+    z-index: 1;
+  }
+  .rot-img-back1 {
+    transform: rotate(-4deg);
+    transform-origin: center;
+    top: 10px; left: 10px;
+    opacity: 0.75;
+    z-index: 2;
+  }
+  .rot-img-front {
+    transform: rotate(0deg);
+    z-index: 3;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.7);
+  }
+  .rot-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .rot-sub {
+    font-size: 11px;
+    color: #6B7280;
+    margin-top: 2px;
+  }
+
+  /* ────────────────────────
+     DESIGN C — Diagonal split (2 images, angled)
+  ──────────────────────── */
+  .diag-card {
+    width: 140px;
+    background: #15161D;
+    border-radius: 16px;
+    padding: 10px;
+    border: 1px solid #1F2030;
+  }
+  .diag-cover {
+    width: 120px;
+    height: 120px;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    margin: 0 auto 10px;
+  }
+  .diag-left {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    clip-path: polygon(0 0, 62% 0, 38% 100%, 0 100%);
+  }
+  .diag-right {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    clip-path: polygon(62% 0, 100% 0, 100% 100%, 38% 100%);
+  }
+  .diag-line {
+    position: absolute;
+    top: 0; bottom: 0;
+    left: calc(50% - 1px);
+    width: 2px;
+    background: rgba(7,7,9,0.8);
+    transform: rotate(15deg) scaleY(1.3);
+    z-index: 3;
+  }
+  .diag-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .diag-sub { font-size: 11px; color: #6B7280; margin-top: 2px; }
+
+  /* ────────────────────────
+     DESIGN D — Mosaic with rounded inner gaps (Pinterest-style)
+  ──────────────────────── */
+  .mosaic-card {
+    width: 140px;
+    background: #15161D;
+    border-radius: 16px;
+    padding: 10px;
+    border: 1px solid #1F2030;
+  }
+  .mosaic-cover {
+    width: 120px;
+    height: 120px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 3px;
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 0 auto 10px;
+  }
+  .mosaic-tile { border-radius: 0; }
+  .mosaic-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .mosaic-sub { font-size: 11px; color: #6B7280; margin-top: 2px; }
+
+  /* ────────────────────────
+     DESIGN E — Blurred background + single focused art
+  ──────────────────────── */
+  .blur-card {
+    width: 140px;
+    background: #15161D;
+    border-radius: 16px;
+    padding: 10px;
+    border: 1px solid #1F2030;
+  }
+  .blur-cover {
+    width: 120px;
+    height: 120px;
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 0 auto 10px;
+  }
+  .blur-bg {
+    position: absolute;
+    inset: 0;
+    filter: blur(12px) saturate(1.5);
+    transform: scale(1.2);
+  }
+  .blur-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(7,7,9,0.35);
+  }
+  .blur-img-row {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 8px;
+  }
+  .blur-thumb {
+    width: 44px; height: 44px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.7);
+    flex-shrink: 0;
+  }
+  .blur-thumb.large {
+    width: 56px; height: 56px;
+  }
+  .blur-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .blur-sub { font-size: 11px; color: #6B7280; margin-top: 2px; }
+
+  /* ────────────────────────
+     DESIGN F — Hexagon / circle cluster
+  ──────────────────────── */
+  .hex-card {
+    width: 140px;
+    background: #15161D;
+    border-radius: 16px;
+    padding: 10px;
+    border: 1px solid #1F2030;
+  }
+  .hex-cover {
+    width: 120px; height: 120px;
+    position: relative;
+    margin: 0 auto 10px;
+  }
+  .circle-art {
+    position: absolute;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.7);
+    border: 2px solid #15161D;
+  }
+  .c1 { width: 68px; height: 68px; top: 0; left: 0; z-index: 4; }
+  .c2 { width: 54px; height: 54px; top: 4px; right: 0; z-index: 3; }
+  .c3 { width: 50px; height: 50px; bottom: 0; left: 16px; z-index: 2; }
+  .c4 { width: 44px; height: 44px; bottom: 4px; right: 4px; z-index: 1; }
+  .hex-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .hex-sub { font-size: 11px; color: #6B7280; margin-top: 2px; }
+
+  /* ────────────────────────
+     ROW CARD variants (52dp thumbnail)
+  ──────────────────────── */
+  .row-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    max-width: 360px;
+  }
+  .row-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: #15161D;
+    border-radius: 14px;
+    padding: 10px 14px;
+    border: 1px solid #1F2030;
+  }
+  .row-thumb {
+    width: 52px; height: 52px;
+    border-radius: 10px;
+    overflow: hidden;
+    flex-shrink: 0;
+    position: relative;
+  }
+  /* Fan small */
+  .row-fan-wrap { position: absolute; inset: 0; }
+  .rf1 { position: absolute; border-radius: 6px; overflow: hidden; }
+  .rf-back2 { width: 36px; height: 36px; top: 4px; left: 12px; opacity: 0.5; z-index: 1; }
+  .rf-back1 { width: 40px; height: 40px; top: 6px; left: 6px; opacity: 0.75; z-index: 2; }
+  .rf-front { width: 44px; height: 44px; top: 8px; left: 2px; z-index: 3; box-shadow: 0 3px 8px rgba(0,0,0,0.6); }
+  /* Mosaic small */
+  .row-mosaic {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 2px;
+    width: 100%; height: 100%;
+  }
+  /* Blur small */
+  .row-blur-bg { position: absolute; inset: 0; filter: blur(8px) saturate(1.5); transform: scale(1.2); }
+  .row-blur-ov { position: absolute; inset: 0; background: rgba(7,7,9,0.3); }
+  .row-blur-imgs {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center; gap: 3px; padding: 5px;
+  }
+  .row-blur-t { width: 20px; height: 20px; border-radius: 4px; overflow: hidden; flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.6); }
+  .row-blur-t.lg { width: 26px; height: 26px; }
+  /* Circle small */
+  .row-circle-wrap { position: absolute; inset: 0; }
+  .rc { position: absolute; border-radius: 50%; overflow: hidden; border: 1.5px solid #15161D; }
+  .rc1 { width: 30px; height: 30px; top: 2px; left: 2px; z-index: 3; }
+  .rc2 { width: 26px; height: 26px; top: 4px; right: 2px; z-index: 2; }
+  .rc3 { width: 24px; height: 24px; bottom: 2px; left: 14px; z-index: 1; }
+
+  .row-info { flex: 1; overflow: hidden; }
+  .row-title {
+    font-size: 14px; font-weight: 700; color: #fff;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .row-sub { font-size: 11.5px; color: #6B7280; margin-top: 2px; }
+  .row-more { color: #4B5563; font-size: 18px; cursor: pointer; }
+
+  /* ── badge ── */
+  .badge {
+    display: inline-block;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 2px 7px;
+    border-radius: 8px;
+    margin-top: 4px;
+  }
+  .badge-green { background: rgba(29,185,84,0.15); color: #1DB954; }
+  .badge-violet { background: rgba(124,58,237,0.15); color: #8B5CF6; }
+
+  /* ── description ── */
+  .desc-box {
+    background: #0D0E12;
+    border: 1px solid #1F2030;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-top: 20px;
+    font-size: 12.5px;
+    color: #9CA3AF;
+    line-height: 1.6;
+  }
+  .desc-box strong { color: #E5E7EB; }
+
+  /* ── Pros/Cons ── */
+  .pros-cons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .pros, .cons {
+    background: #0D0E12;
+    border-radius: 10px;
+    padding: 10px 12px;
+  }
+  .pros { border-left: 3px solid #1DB954; }
+  .cons { border-left: 3px solid #EF4444; }
+  .pros h4 { font-size: 11px; color: #1DB954; margin-bottom: 6px; font-weight: 700; }
+  .cons h4 { font-size: 11px; color: #EF4444; margin-bottom: 6px; font-weight: 700; }
+  .pros li, .cons li { font-size: 11.5px; color: #9CA3AF; margin-left: 14px; margin-bottom: 3px; line-height: 1.5; }
+
+  hr { border: none; border-top: 1px solid #1A1B22; margin: 20px 0; }
+</style>
+</head>
+<body>
+
+<h1>TuneSpot Playlist Cover — Design Options</h1>
+<p class="subtitle">Preview all options before implementing. Click a tab to switch.</p>
+
+<div class="tabs">
+  <div class="tab active"    onclick="show('a')">A · Fan Stack</div>
+  <div class="tab"           onclick="show('b')">B · Rotated Stack</div>
+  <div class="tab"           onclick="show('c')">C · Diagonal Split</div>
+  <div class="tab"           onclick="show('d')">D · Mosaic Gap</div>
+  <div class="tab"           onclick="show('e')">E · Blur Stage</div>
+  <div class="tab"           onclick="show('f')">F · Circle Cluster</div>
+</div>
+
+<!-- ═══════════════════════ A — FAN STACK ═══════════════════════ -->
+<div class="design-panel active" id="panel-a">
+
+  <div class="section-label">Grid cards (Playlists shelf)</div>
+  <div class="cards-row">
+    <!-- 4 songs -->
+    <div class="fan-card">
+      <div class="fan-cover">
+        <div class="fan-img fan-img-3"><div class="img art-d"></div></div>
+        <div class="fan-img fan-img-2"><div class="img art-b"></div></div>
+        <div class="fan-img fan-img-1"><div class="img art-a"></div></div>
+      </div>
+      <div class="fan-title">Road Trip Mix</div>
+      <div class="fan-sub">28 tracks</div>
+    </div>
+    <!-- 2 songs -->
+    <div class="fan-card">
+      <div class="fan-cover">
+        <div class="fan-img fan-img-2" style="opacity:0.6"><div class="img art-e"></div></div>
+        <div class="fan-img fan-img-1"><div class="img art-c"></div></div>
+      </div>
+      <div class="fan-title">Chill Evening</div>
+      <div class="fan-sub">12 tracks</div>
+    </div>
+    <!-- 1 song -->
+    <div class="fan-card">
+      <div class="fan-cover">
+        <div class="fan-img fan-img-1" style="width:100px;height:100px;left:10px;bottom:10px"><div class="img art-f"></div></div>
+      </div>
+      <div class="fan-title">Tamil Hits</div>
+      <div class="fan-sub">53 tracks</div>
+    </div>
+    <!-- 0 songs -->
+    <div class="fan-card">
+      <div class="fan-cover" style="display:flex;align-items:center;justify-content:center">
+        <div style="width:80px;height:80px;border-radius:12px;background:linear-gradient(135deg,#1A1B22,#0E0F14);display:flex;align-items:center;justify-content:center;font-size:28px;">🎵</div>
+      </div>
+      <div class="fan-title">New Playlist</div>
+      <div class="fan-sub">0 tracks</div>
+    </div>
+  </div>
+
+  <div class="section-label">Row cards (List view thumbnail)</div>
+  <div class="row-section">
+    <div class="row-card">
+      <div class="row-thumb">
+        <div class="row-fan-wrap">
+          <div class="rf1 rf-back2"><div class="img art-d"></div></div>
+          <div class="rf1 rf-back1"><div class="img art-b"></div></div>
+          <div class="rf1 rf-front"><div class="img art-a"></div></div>
+        </div>
+      </div>
+      <div class="row-info">
+        <div class="row-title">Road Trip Mix</div>
+        <div class="row-sub">28 tracks</div>
+      </div>
+      <div class="row-more">⋮</div>
+    </div>
+    <div class="row-card">
+      <div class="row-thumb">
+        <div class="row-fan-wrap">
+          <div class="rf1 rf-back1" style="opacity:0.5"><div class="img art-e"></div></div>
+          <div class="rf1 rf-front"><div class="img art-c"></div></div>
+        </div>
+      </div>
+      <div class="row-info">
+        <div class="row-title">Chill Evening</div>
+        <div class="row-sub">12 tracks</div>
+      </div>
+      <div class="row-more">⋮</div>
+    </div>
+  </div>
+
+  <div class="desc-box">
+    <strong>Fan Stack</strong> — Albums spread in a bottom-left to top-right fan. The frontmost album is the dominant/primary cover. Cards behind it peek out with decreasing opacity. Feels like physical vinyl records spread on a table. Works well for 2–4 images; gracefully degrades to a single card.
+    <div class="pros-cons">
+      <div class="pros"><h4>✓ PROS</h4><ul><li>Visually rich, storytelling feel</li><li>Depth without harsh cuts</li><li>Great on grid cards</li></ul></div>
+      <div class="cons"><h4>✗ CONS</h4><ul><li>Bottom art partially hidden</li><li>Small at 52dp row thumbnail</li></ul></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ B — ROTATED STACK ═══════════════════════ -->
+<div class="design-panel" id="panel-b">
+
+  <div class="section-label">Grid cards (Playlists shelf)</div>
+  <div class="cards-row">
+    <div class="rot-card">
+      <div class="rot-cover">
+        <div class="rot-img rot-img-back2"><div class="img art-c"></div></div>
+        <div class="rot-img rot-img-back1"><div class="img art-b"></div></div>
+        <div class="rot-img rot-img-front"><div class="img art-a"></div></div>
+      </div>
+      <div class="rot-title">Road Trip Mix</div>
+      <div class="rot-sub">28 tracks</div>
+    </div>
+    <div class="rot-card">
+      <div class="rot-cover">
+        <div class="rot-img rot-img-back1" style="opacity:0.6"><div class="img art-e"></div></div>
+        <div class="rot-img rot-img-front"><div class="img art-d"></div></div>
+      </div>
+      <div class="rot-title">Chill Evening</div>
+      <div class="rot-sub">12 tracks</div>
+    </div>
+    <div class="rot-card">
+      <div class="rot-cover">
+        <div class="rot-img rot-img-front"><div class="img art-f"></div></div>
+      </div>
+      <div class="rot-title">Tamil Hits</div>
+      <div class="rot-sub">53 tracks</div>
+    </div>
+    <div class="rot-card">
+      <div class="rot-cover" style="display:flex;align-items:center;justify-content:center">
+        <div style="width:80px;height:80px;border-radius:12px;background:linear-gradient(135deg,#1A1B22,#0E0F14);display:flex;align-items:center;justify-content:center;font-size:28px;">🎵</div>
+      </div>
+      <div class="rot-title">New Playlist</div>
+      <div class="rot-sub">0 tracks</div>
+    </div>
+  </div>
+
+  <div class="section-label">Row cards (List view thumbnail)</div>
+  <div class="row-section">
+    <div class="row-card">
+      <div class="row-thumb" style="position:relative">
+        <div style="position:absolute;width:38px;height:38px;border-radius:6px;overflow:hidden;top:8px;left:8px;transform:rotate(-6deg);opacity:0.5;z-index:1"><div class="img art-c"></div></div>
+        <div style="position:absolute;width:40px;height:40px;border-radius:6px;overflow:hidden;top:8px;left:6px;transform:rotate(-3deg);opacity:0.75;z-index:2"><div class="img art-b"></div></div>
+        <div style="position:absolute;width:42px;height:42px;border-radius:6px;overflow:hidden;top:5px;left:5px;z-index:3;box-shadow:0 3px 10px rgba(0,0,0,0.7)"><div class="img art-a"></div></div>
+      </div>
+      <div class="row-info">
+        <div class="row-title">Road Trip Mix</div>
+        <div class="row-sub">28 tracks</div>
+      </div>
+      <div class="row-more">⋮</div>
+    </div>
+  </div>
+
+  <div class="desc-box">
+    <strong>Rotated Stack</strong> — All album arts stacked at the same position, with the back images rotated ±4–8°. The top card is perfectly straight with a prominent shadow. Spotify uses a subtle version of this. Clean, modern, minimal.
+    <div class="pros-cons">
+      <div class="pros"><h4>✓ PROS</h4><ul><li>Clean centre composition</li><li>Elegant, Spotify-familiar</li><li>Works at any size</li></ul></div>
+      <div class="cons"><h4>✗ CONS</h4><ul><li>Only top art fully visible</li><li>Others mainly decorative</li></ul></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ C — DIAGONAL SPLIT ═══════════════════════ -->
+<div class="design-panel" id="panel-c">
+
+  <div class="section-label">Grid cards — different split counts</div>
+  <div class="cards-row">
+    <!-- 2 images: diagonal -->
+    <div class="diag-card">
+      <div class="diag-cover">
+        <div class="diag-left"><div class="img art-a"></div></div>
+        <div class="diag-right"><div class="img art-b"></div></div>
+        <div class="diag-line"></div>
+      </div>
+      <div class="diag-title">Road Trip Mix</div>
+      <div class="diag-sub">28 tracks · 2 imgs</div>
+    </div>
+    <!-- 2 images: different angle -->
+    <div class="diag-card">
+      <div class="diag-cover" style="border-radius:12px">
+        <div style="position:absolute;inset:0;clip-path:polygon(0 0, 58% 0, 42% 100%, 0 100%)"><div class="img art-c"></div></div>
+        <div style="position:absolute;inset:0;clip-path:polygon(58% 0, 100% 0, 100% 100%, 42% 100%)"><div class="img art-d"></div></div>
+        <div style="position:absolute;top:0;bottom:0;left:calc(50% - 1px);width:2px;background:rgba(7,7,9,0.9);transform:rotate(10deg) scaleY(1.4);z-index:3"></div>
+      </div>
+      <div class="diag-title">Chill Evening</div>
+      <div class="diag-sub">12 tracks · 2 imgs</div>
+    </div>
+    <!-- 3 images: triple split -->
+    <div class="diag-card">
+      <div class="diag-cover">
+        <div style="position:absolute;inset:0;clip-path:polygon(0 0, 38% 0, 22% 100%, 0 100%)"><div class="img art-a"></div></div>
+        <div style="position:absolute;inset:0;clip-path:polygon(38% 0, 72% 0, 56% 100%, 22% 100%)"><div class="img art-e"></div></div>
+        <div style="position:absolute;inset:0;clip-path:polygon(72% 0, 100% 0, 100% 100%, 56% 100%)"><div class="img art-f"></div></div>
+        <div style="position:absolute;top:0;bottom:0;left:33%;width:2px;background:rgba(7,7,9,0.8);transform:rotate(8deg) scaleY(1.3);z-index:3"></div>
+        <div style="position:absolute;top:0;bottom:0;left:63%;width:2px;background:rgba(7,7,9,0.8);transform:rotate(8deg) scaleY(1.3);z-index:3"></div>
+      </div>
+      <div class="diag-title">Tamil Hits</div>
+      <div class="diag-sub">53 tracks · 3 imgs</div>
+    </div>
+    <!-- 1 image -->
+    <div class="diag-card">
+      <div class="diag-cover">
+        <div style="position:absolute;inset:0"><div class="img art-b"></div></div>
+      </div>
+      <div class="diag-title">New Playlist</div>
+      <div class="diag-sub">8 tracks · 1 img</div>
+    </div>
+  </div>
+
+  <div class="desc-box">
+    <strong>Diagonal Split</strong> — Images divided by angled clip-paths. No hard vertical/horizontal cuts; a subtle rotation (10–15°) on the dividing line makes it feel dynamic rather than mechanical. This fixes the original "slash looks bad" problem — the angle is intentional design, not an accident.
+    <div class="pros-cons">
+      <div class="pros"><h4>✓ PROS</h4><ul><li>Fixes the harsh vertical cut</li><li>Dynamic, editorial feel</li><li>Each album art fully seen</li></ul></div>
+      <div class="cons"><h4>✗ CONS</h4><ul><li>Edge art slightly cropped</li><li>Darker seam line needed</li></ul></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ D — MOSAIC WITH GAP ═══════════════════════ -->
+<div class="design-panel" id="panel-d">
+
+  <div class="section-label">Grid cards</div>
+  <div class="cards-row">
+    <!-- 4 images -->
+    <div class="mosaic-card">
+      <div class="mosaic-cover">
+        <div class="mosaic-tile"><div class="img art-a"></div></div>
+        <div class="mosaic-tile"><div class="img art-b"></div></div>
+        <div class="mosaic-tile"><div class="img art-c"></div></div>
+        <div class="mosaic-tile"><div class="img art-d"></div></div>
+      </div>
+      <div class="mosaic-title">Road Trip Mix</div>
+      <div class="mosaic-sub">28 tracks</div>
+    </div>
+    <!-- 3 images: large top + 2 bottom -->
+    <div class="mosaic-card">
+      <div class="mosaic-cover" style="grid-template-rows:1.4fr 1fr">
+        <div class="mosaic-tile" style="grid-column:1/3"><div class="img art-e"></div></div>
+        <div class="mosaic-tile"><div class="img art-f"></div></div>
+        <div class="mosaic-tile"><div class="img art-a"></div></div>
+      </div>
+      <div class="mosaic-title">Chill Evening</div>
+      <div class="mosaic-sub">12 tracks</div>
+    </div>
+    <!-- 2 images: top/bottom split -->
+    <div class="mosaic-card">
+      <div class="mosaic-cover" style="grid-template-columns:1fr;grid-template-rows:1fr 1fr">
+        <div class="mosaic-tile"><div class="img art-b"></div></div>
+        <div class="mosaic-tile"><div class="img art-c"></div></div>
+      </div>
+      <div class="mosaic-title">Tamil Hits</div>
+      <div class="mosaic-sub">53 tracks · 2 imgs</div>
+    </div>
+    <!-- 1 image -->
+    <div class="mosaic-card">
+      <div class="mosaic-cover" style="grid-template-columns:1fr;grid-template-rows:1fr">
+        <div class="mosaic-tile"><div class="img art-d"></div></div>
+      </div>
+      <div class="mosaic-title">New Playlist</div>
+      <div class="mosaic-sub">8 tracks</div>
+    </div>
+  </div>
+
+  <div class="section-label">Row cards</div>
+  <div class="row-section">
+    <div class="row-card">
+      <div class="row-thumb">
+        <div class="row-mosaic">
+          <div><div class="img art-a"></div></div>
+          <div><div class="img art-b"></div></div>
+          <div><div class="img art-c"></div></div>
+          <div><div class="img art-d"></div></div>
+        </div>
+      </div>
+      <div class="row-info">
+        <div class="row-title">Road Trip Mix</div>
+        <div class="row-sub">28 tracks</div>
+      </div>
+      <div class="row-more">⋮</div>
+    </div>
+    <div class="row-card">
+      <div class="row-thumb">
+        <div class="row-mosaic" style="grid-template-columns:1fr;grid-template-rows:1fr 1fr">
+          <div><div class="img art-e"></div></div>
+          <div><div class="img art-f"></div></div>
+        </div>
+      </div>
+      <div class="row-info">
+        <div class="row-title">Chill Evening</div>
+        <div class="row-sub">12 tracks</div>
+      </div>
+      <div class="row-more">⋮</div>
+    </div>
+  </div>
+
+  <div class="desc-box">
+    <strong>Mosaic with Gap</strong> — The classic 2×2 grid but with a 3px gap between tiles. The gap is the background colour (#15161D) so it acts as a border/frame between images. The layouts adapt: 2 images go top/bottom (horizontal split), 3 images get a wide top tile + 2 bottom tiles, 4 images get equal 2×2. This is the OpenTune approach but with the breathing gap that makes it feel intentional rather than crammed.
+    <div class="pros-cons">
+      <div class="pros"><h4>✓ PROS</h4><ul><li>Each art visible equally</li><li>Gap makes it feel designed</li><li>Familiar (Spotify/Apple)</li><li>Works perfectly at 52dp</li></ul></div>
+      <div class="cons"><h4>✗ CONS</h4><ul><li>Requires exactly 4 arts for the "full" look</li></ul></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ E — BLUR STAGE ═══════════════════════ -->
+<div class="design-panel" id="panel-e">
+
+  <div class="section-label">Grid cards</div>
+  <div class="cards-row">
+    <div class="blur-card">
+      <div class="blur-cover">
+        <div class="blur-bg"><div class="img art-a"></div></div>
+        <div class="blur-overlay"></div>
+        <div class="blur-img-row">
+          <div class="blur-thumb"><div class="img art-b"></div></div>
+          <div class="blur-thumb large"><div class="img art-a"></div></div>
+          <div class="blur-thumb"><div class="img art-c"></div></div>
+        </div>
+      </div>
+      <div class="blur-title">Road Trip Mix</div>
+      <div class="blur-sub">28 tracks</div>
+    </div>
+    <div class="blur-card">
+      <div class="blur-cover">
+        <div class="blur-bg"><div class="img art-d"></div></div>
+        <div class="blur-overlay"></div>
+        <div class="blur-img-row">
+          <div class="blur-thumb large"><div class="img art-d"></div></div>
+          <div class="blur-thumb"><div class="img art-e"></div></div>
+        </div>
+      </div>
+      <div class="blur-title">Chill Evening</div>
+      <div class="blur-sub">12 tracks</div>
+    </div>
+    <div class="blur-card">
+      <div class="blur-cover">
+        <div class="blur-bg"><div class="img art-f"></div></div>
+        <div class="blur-overlay"></div>
+        <div class="blur-img-row">
+          <div class="blur-thumb large" style="width:70px;height:70px;border-radius:12px"><div class="img art-f"></div></div>
+        </div>
+      </div>
+      <div class="blur-title">Tamil Hits</div>
+      <div class="blur-sub">53 tracks</div>
+    </div>
+    <div class="blur-card">
+      <div class="blur-cover" style="background:linear-gradient(135deg,#1A1B22,#0E0F14);display:flex;align-items:center;justify-content:center">
+        <span style="font-size:32px">🎵</span>
+      </div>
+      <div class="blur-title">New Playlist</div>
+      <div class="blur-sub">0 tracks</div>
+    </div>
+  </div>
+
+  <div class="section-label">Row cards</div>
+  <div class="row-section">
+    <div class="row-card">
+      <div class="row-thumb">
+        <div class="row-blur-bg"><div class="img art-a"></div></div>
+        <div class="row-blur-ov"></div>
+        <div class="row-blur-imgs">
+          <div class="row-blur-t"><div class="img art-b"></div></div>
+          <div class="row-blur-t lg"><div class="img art-a"></div></div>
+          <div class="row-blur-t"><div class="img art-c"></div></div>
+        </div>
+      </div>
+      <div class="row-info">
+        <div class="row-title">Road Trip Mix</div>
+        <div class="row-sub">28 tracks</div>
+      </div>
+      <div class="row-more">⋮</div>
+    </div>
+  </div>
+
+  <div class="desc-box">
+    <strong>Blur Stage</strong> — The dominant album art is blurred full-bleed as a background. The individual album arts are then layered as floating thumbnails on top (the primary one slightly larger in the centre). Creates an ambient, immersive feel — like Apple Music's player background. Rare to see on playlist list items, stands out.
+    <div class="pros-cons">
+      <div class="pros"><h4>✓ PROS</h4><ul><li>Most visually rich option</li><li>Feels premium / editorial</li><li>No harsh cuts at all</li></ul></div>
+      <div class="cons"><h4>✗ CONS</h4><ul><li>Heavy in a long list</li><li>Small thumbnails hard to see at 52dp</li><li>Most complex to implement</li></ul></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ F — CIRCLE CLUSTER ═══════════════════════ -->
+<div class="design-panel" id="panel-f">
+
+  <div class="section-label">Grid cards</div>
+  <div class="cards-row">
+    <div class="hex-card">
+      <div class="hex-cover">
+        <div class="circle-art c1"><div class="img art-a"></div></div>
+        <div class="circle-art c2"><div class="img art-b"></div></div>
+        <div class="circle-art c3"><div class="img art-c"></div></div>
+        <div class="circle-art c4"><div class="img art-d"></div></div>
+      </div>
+      <div class="hex-title">Road Trip Mix</div>
+      <div class="hex-sub">28 tracks</div>
+    </div>
+    <div class="hex-card">
+      <div class="hex-cover">
+        <div class="circle-art" style="width:74px;height:74px;top:4px;left:8px;z-index:3;border:2px solid #15161D"><div class="img art-e"></div></div>
+        <div class="circle-art" style="width:60px;height:60px;top:8px;right:4px;z-index:2;border:2px solid #15161D"><div class="img art-f"></div></div>
+      </div>
+      <div class="hex-title">Chill Evening</div>
+      <div class="hex-sub">12 tracks</div>
+    </div>
+    <div class="hex-card">
+      <div class="hex-cover" style="display:flex;align-items:center;justify-content:center">
+        <div class="circle-art" style="position:relative;width:96px;height:96px"><div class="img art-a"></div></div>
+      </div>
+      <div class="hex-title">Tamil Hits</div>
+      <div class="hex-sub">53 tracks</div>
+    </div>
+    <div class="hex-card">
+      <div class="hex-cover" style="display:flex;align-items:center;justify-content:center">
+        <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#1A1B22,#0E0F14);display:flex;align-items:center;justify-content:center;font-size:28px;border:2px solid #1F2030">🎵</div>
+      </div>
+      <div class="hex-title">New Playlist</div>
+      <div class="hex-sub">0 tracks</div>
+    </div>
+  </div>
+
+  <div class="section-label">Row cards</div>
+  <div class="row-section">
+    <div class="row-card">
+      <div class="row-thumb">
+        <div class="row-circle-wrap">
+          <div class="rc rc1"><div class="img art-a"></div></div>
+          <div class="rc rc2"><div class="img art-b"></div></div>
+          <div class="rc rc3"><div class="img art-c"></div></div>
+        </div>
+      </div>
+      <div class="row-info">
+        <div class="row-title">Road Trip Mix</div>
+        <div class="row-sub">28 tracks</div>
+      </div>
+      <div class="row-more">⋮</div>
+    </div>
+  </div>
+
+  <div class="desc-box">
+    <strong>Circle Cluster</strong> — Album arts rendered as overlapping circles of different sizes, arranged in a natural cluster (large front-left, medium top-right, small bottom). The overlapping border (same as background colour) creates separation. Unique, playful, and avoids any cuts whatsoever.
+    <div class="pros-cons">
+      <div class="pros"><h4>✓ PROS</h4><ul><li>Completely avoids cuts</li><li>Playful, distinctive look</li><li>Arts clearly identifiable</li></ul></div>
+      <div class="cons"><h4>✗ CONS</h4><ul><li>Not rectangular — wastes corner space</li><li>Feels less "music app" standard</li></ul></div>
+    </div>
+  </div>
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.design-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
